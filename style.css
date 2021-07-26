@@ -1,0 +1,20 @@
+.posts,
+.comments {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    grid-row-gap: 10px;
+    grid-column-gap: 10px;
+}
+
+.post,
+.comment {
+    width: 400px;
+    border: 1px solid darkblue;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.comment {
+    border:1px solid teal;
+}
