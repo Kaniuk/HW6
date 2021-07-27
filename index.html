@@ -17,10 +17,73 @@ https://jsonplaceholder.typicode.com/comments
 -->
 <div class="posts"></div>
 <div class="comments"></div>
+<div class="users-box"></div>
+<div class="post-box"></div>
+<div class="comments-box"></div>
 
 <script>
-   /* const postsElement = document.getElementsByClassName('posts')[0];
+    /* const postsElement = document.getElementsByClassName('posts')[0];
 
+     fetch('https://jsonplaceholder.typicode.com/posts')
+         .then(value => value.json())
+         .then(posts => {
+             for (const post of posts) {
+                 const postDiv = document.createElement('div');
+                 postDiv.classList.add('post');
+
+                 const postInfoDiv = document.createElement('div');
+                 postInfoDiv.innerText = `User id: ${post.userId} \npost id: ${post.id}`;
+                 postDiv.append(postInfoDiv);
+
+                 const postTitle = document.createElement('h2');
+                 postTitle.innerText = post.title;
+                 postDiv.append(postTitle);
+
+                 const postBody = document.createElement('p');
+                 postBody.innerText = post.body;
+                 postDiv.append(postBody);
+
+                 postsElement.append(postDiv);
+             }
+         });
+
+     const commentsElement = document.getElementsByClassName('comments')[0];
+
+     fetch('https://jsonplaceholder.typicode.com/comments')
+         .then(value => value.json())
+         .then(comments => {
+             for (const comment of comments) {
+                 const commentDiv = document.createElement('div');
+                 commentDiv.classList.add('comment');
+
+                 const commentInfoDiv = document.createElement('div');
+                 commentInfoDiv.innerText = `Comment id: ${comment.postId} \n comment id: ${comment.id}`;
+                 commentDiv.append(commentInfoDiv);
+
+                 const commentName = document.createElement('h2');
+                 commentName.innerText = comment.name;
+                 commentDiv.append(commentName);
+
+                 const commentEmail = document.createElement('h4');
+                 commentEmail.innerText = comment.email;
+                 commentDiv.append(commentEmail);
+
+                 const commentBody = document.createElement('p');
+                 commentBody.innerText = comment.body;
+                 commentDiv.append(commentBody);
+
+                 commentsElement.append(commentDiv);
+             }
+         });
+ */
+    /*
+    1.
+    Отримати відповідь з цього ресурсу відповідь, та вивести в документ як в прикладі на занятті
+    https://jsonplaceholder.typicode.com/posts
+    зробити кнопку до кожного поста. при кліку на яку виводяться в окремий блок всі коментарі поточного поста-->
+    */
+    const postsElement = document.getElementsByClassName('posts')[0];
+    const commentsBox = document.getElementsByClassName('comments')[0];
     fetch('https://jsonplaceholder.typicode.com/posts')
         .then(value => value.json())
         .then(posts => {
@@ -29,97 +92,100 @@ https://jsonplaceholder.typicode.com/comments
                 postDiv.classList.add('post');
 
                 const postInfoDiv = document.createElement('div');
-                postInfoDiv.innerText = `User id: ${post.userId} \npost id: ${post.id}`;
+                postInfoDiv.innerText = `User id: ${post.userId} `;
+                let detailButton = document.createElement('button');
+                detailButton.innerText = 'details';
+                detailButton.onclick = function () {
+                    fetch(`https://jsonplaceholder.typicode.com/posts/${post.id}/comments`)
+                        .then(value => value.json())
+                        .then(comments => {
+
+
+                            commentsBox.innerText = ' ';
+                            for (const comment of comments) {
+                                const commentDiv = document.createElement('div');
+                                commentDiv.classList.add('comment');
+                                commentDiv.innerText = post.body;
+                                commentsBox.append(commentDiv);
+
+                            }
+
+                        })
+
+                }
+
                 postDiv.append(postInfoDiv);
+                postDiv.append(detailButton);
 
-                const postTitle = document.createElement('h2');
-                postTitle.innerText = post.title;
-                postDiv.append(postTitle);
-
-                const postBody = document.createElement('p');
-                postBody.innerText = post.body;
-                postDiv.append(postBody);
 
                 postsElement.append(postDiv);
             }
         });
 
-    const commentsElement = document.getElementsByClassName('comments')[0];
-
-    fetch('https://jsonplaceholder.typicode.com/comments')
+    /* 1.
+     Отримати відповідь з цього ресурсу відповідь, та вивести в документ як в прикладі на занятті
+     https://jsonplaceholder.typicode.com/users
+         кожному елементу юзера створити кнопку, при клику на яку в окремий блок виводяться всі пости поточного юзера.
+         Кожному елементу post створити кнопку, при клику на яку в окремий блок виводяться всі коментарі поточного поста*/
+    const usersBox = document.getElementsByClassName('users-box')[0];
+    const postsBox = document.getElementsByClassName('post-box')[0];
+    const postComments = document.getElementsByClassName('comments-box')[0];
+    fetch('https://jsonplaceholder.typicode.com/users')
         .then(value => value.json())
-        .then(comments => {
-            for (const comment of comments) {
-                const commentDiv = document.createElement('div');
-                commentDiv.classList.add('comment');
+        .then(users => {
 
-                const commentInfoDiv = document.createElement('div');
-                commentInfoDiv.innerText = `Comment id: ${comment.postId} \n comment id: ${comment.id}`;
-                commentDiv.append(commentInfoDiv);
+            for (const user of users) {
+                let hUser = document.createElement('h2');
+                hUser.innerText = `${user.id} - ${user.name} `;
+                let postsButton = document.createElement('button');
+                postsButton.innerText = 'posts';
+                postsButton.onclick = function () {
 
-                const commentName = document.createElement('h2');
-                commentName.innerText = comment.name;
-                commentDiv.append(commentName);
 
-                const commentEmail = document.createElement('h4');
-                commentEmail.innerText = comment.email;
-                commentDiv.append(commentEmail);
+                    fetch(`https://jsonplaceholder.typicode.com/users/${user.id}/posts`)
+                        .then(value => value.json())
+                        .then(posts => {
 
-                const commentBody = document.createElement('p');
-                commentBody.innerText = comment.body;
-                commentDiv.append(commentBody);
 
-                commentsElement.append(commentDiv);
+                            /* const postsBox = document.getElementsByClassName('post-box')[0];*/
+                            postsBox.innerHTML = ' ';
+                            for (const post of posts) {
+                                let postsDiv = document.createElement('div');
+                                postsDiv.innerText = post.title;
+                                postsBox.append(postsDiv);
+
+
+                                let commentsButton = document.createElement('button');
+                                commentsButton.innerText = 'comments';
+                                commentsButton.onclick = function () {
+
+                                    fetch(`https://jsonplaceholder.typicode.com/posts/${post.id}/comments`)
+                                        .then(value => value.json())
+                                        .then(comments => {
+
+                                            /*const postComments = document.getElementsByClassName('comments-box')[0];*/
+                                            postComments.innerHTML = ' ';
+                                            for (const comment of comments) {
+                                                let commentsDiv = document.createElement('div');
+                                                commentsDiv.innerText = post.body;
+                                                postComments.append(commentsDiv);
+
+                                            }
+                                        });
+
+                                };
+
+                                postsDiv.append(commentsButton);
+
+
+                            }
+                        });
+                };
+                hUser.append(postsButton);
+                usersBox.append(hUser);
             }
         });
-*/
-/*
-1.
-Отримати відповідь з цього ресурсу відповідь, та вивести в документ як в прикладі на занятті
-https://jsonplaceholder.typicode.com/posts
-зробити кнопку до кожного поста. при кліку на яку виводяться в окремий блок всі коментарі поточного поста-->
-*/
-   const postsElement = document.getElementsByClassName('posts')[0];
-   const commentsBox = document.getElementsByClassName('comments')[0];
-   fetch('https://jsonplaceholder.typicode.com/posts')
-       .then(value => value.json())
-       .then(posts => {
-           for (const post of posts) {
-               const postDiv = document.createElement('div');
-               postDiv.classList.add('post');
 
-               const postInfoDiv = document.createElement('div');
-               postInfoDiv.innerText = `User id: ${post.userId} `;
-               let detailButton = document.createElement('button');
-               detailButton.innerText = 'details';
-               detailButton.onclick = function () {
-                   fetch(`https://jsonplaceholder.typicode.com/posts/${post.id}/comments`)
-                   .then(value => value.json())
-                   .then(comments => {
-
-
-                       commentsBox.innerText = ' ';
-                       for (const comment of comments) {
-                           const commentDiv = document.createElement('div');
-                           commentDiv.classList.add('comment');
-                           commentDiv.innerText = post.body;
-                           commentsBox.append(commentDiv);
-
-
-                       }
-
-                   })
-
-               }
-
-               postDiv.append(postInfoDiv);
-               postDiv.append(detailButton);
-
-
-
-               postsElement.append(postDiv);
-           }
-       });
 
 </script>
 </body>
